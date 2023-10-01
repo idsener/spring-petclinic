@@ -28,3 +28,11 @@ jobs:
           cache: maven
       - name: Build with Maven Wrapper
         run: ./mvnw -B package
+      - name: Build & push Docker image 
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          image: dsener/petclinic
+          registry: docker.io
+          dockerfile: .devcontainer/Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
