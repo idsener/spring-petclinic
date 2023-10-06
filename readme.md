@@ -14,6 +14,7 @@ Compile the code
 Run the tests
 Package the project as a runnable Docker image
 Publish the image to JFrog Artifactory in your pipeline
+
 3. Make sure all dependencies are resolved from Maven Central
 
 Deliverables:
@@ -84,7 +85,7 @@ docker run -d --publish 8080:8080 ilaysener.jfrog.io/ilay-docker/pet-clinic:late
 Bonus Deliverable: XRay Scan Data export (JSON format) for your image
 
 ```
-XRay Scan Data export files are available under '' folder
+XRay Scan Data export files are available under 'XRay Reports' folder under root directory
 ```
 
 
