@@ -12,8 +12,7 @@ Further information and steps for each approach:
 ## 1 - Simple github actions
 ```
 #Github repository for this project
-[
-](https://github.com/idsener/spring-petclinic)
+[Git Repository](https://github.com/idsener/spring-petclinic)
 
 ```
 
