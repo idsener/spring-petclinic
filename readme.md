@@ -24,6 +24,7 @@ Github Actions workflow files within that repo
 Docker file within that repo
 readme.md file explaining the work and how to run the project
 Bonus Deliverable: XRay Scan Data export (JSON format) for your image
+
 2. Command to obtain and run the docker image
 ```
 
@@ -81,6 +82,10 @@ docker run -d --publish 8080:8080 ilaysener.jfrog.io/ilay-docker/pet-clinic:late
 ```
 
 Bonus Deliverable: XRay Scan Data export (JSON format) for your image
+
+```
+XRay Scan Data export files are available under '' folder
+```
 
 
 
