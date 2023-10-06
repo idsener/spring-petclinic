@@ -75,7 +75,7 @@ readme.md file explaining the work and how to run the project
 ```
 readme.md
 
-#pull docker image from artifactory. Anonymous pull access is provided.
+#pull docker image from artifactory. AMD64 and ARM64 versions of the image are available with anonymous pull access.
 docker pull ilaysener.jfrog.io/ilay-docker/pet-clinic:latest
 #run the docker image. 
 docker run -d --publish 8080:8080 ilaysener.jfrog.io/ilay-docker/pet-clinic:latest
@@ -101,13 +101,4 @@ git clone https://github.com/spring-projects/spring-petclinic.git
 The docker image for the application is published to Artifactory,
 https://ilaysener.jfrog.io/artifactory/ilay-docker/pet-clinic/
 
-
-```
-
-
-```
-git clone https://github.com/spring-projects/spring-petclinic.git
-cd spring-petclinic
-./mvnw package
-java -jar target/*.jar
 ```
