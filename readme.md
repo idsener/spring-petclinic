@@ -45,7 +45,9 @@ Publish the image to JFrog Artifactory in your pipeline
 2 approaches implemented.
 A) build, test, package and deploy features are all captured inside the 'Dockerfile'. Github actions workflow, 'build.yml', utilises this Dockerfile to build, test, package, and deploy
 to artifactory.
-B) The latter utilises multiple steps in the Github actions to build, test, package and deploy the docker image to artifactory. A different 'Dockerfile' used in this approach. (different project URL)
+B) The latter utilises multiple steps in the Github actions to build, test, package and deploy the docker image to artifactory. A different 'Dockerfile' used in this approach. ([different project URL](https://github.com/idsener/spring-petclinic2)). This should be ready shortly.
+
+This implementation refers to option A.
 ```
 
 3. Make sure all dependencies are resolved from Maven Central
