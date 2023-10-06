@@ -75,7 +75,7 @@ readme.md file explaining the work and how to run the project
 ```
 readme.md
 
-#pull docker image from artifactory
+#pull docker image from artifactory. Anonymous pull access is provided.
 docker pull ilaysener.jfrog.io/ilay-docker/pet-clinic:latest
 #run the docker image. 
 docker run -d --publish 8080:8080 ilaysener.jfrog.io/ilay-docker/pet-clinic:latest
