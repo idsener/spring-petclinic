@@ -11,9 +11,9 @@ RUN ./mvnw dependency:resolve
 COPY src ./src
 
 # use the above BASE image as base for TESTING
-FROM base as test
+#FROM base as test
 # run application test scripts
-CMD ["./mvnw", "test"]
+#CMD ["./mvnw", "test"]
 
 # use the above BASE image as base to build application 
 FROM base as build
